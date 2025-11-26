@@ -28,7 +28,7 @@ int main() {
     // Program Start Message
     cout << "Starting Program..." << endl;
 
-    
+
     // Variable Declarations
     string lineTest;
     fstream file("given/flights.txt");
@@ -39,11 +39,12 @@ int main() {
         return 1;
     }
     cout << "Successfully opened flights.txt" << endl;
-
+    */
+   
     clock_t tStartBub, tStopBub;
     clock_t tStartMer, tStopMer;
     double compute_time_Bub = 0, compute_time_Mer = 0;
-    */
+    
 
     
     /*vector<double> FlightTimeHour;
