@@ -25,27 +25,41 @@ void merge(double arr[], int left, int mid, int right);
 
 int main() {
     
+    // Program Start Message
+    cout << "Starting Program..." << endl;
+
+    
     // Variable Declarations
     string lineTest;
-    fstream file("flights.txt");
+    fstream file("given/flights.txt");
+    
+    /* check if file opened successfully
+    if (!file.is_open()) {
+        cerr << "ERROR: Could not open ../given/flights.txt" << endl;
+        return 1;
+    }
+    cout << "Successfully opened flights.txt" << endl;
 
     clock_t tStartBub, tStopBub;
     clock_t tStartMer, tStopMer;
-    double compute_time_Bub, compute_time_Mer;
+    double compute_time_Bub = 0, compute_time_Mer = 0;
+    */
 
+    
     /*vector<double> FlightTimeHour;
     vector<double> FlightCost;
     vector<int> CityNum; */
+
     double FlightTimeHour[100];
     double FlightCost[100];
     int CityNum[100];
     
     // truncate files at start of program (prevents duplicates)
-    ofstream outputFile1("FtimeBubSort.txt", ios::trunc);
-    ofstream outputFile2("FcostbubSort.txt", ios::trunc);
-    ofstream outputFile3("FtimeMerSort.txt", ios::trunc);
-    ofstream outputFile4("FcostMerSort.txt", ios::trunc);
-    ofstream runTimeFile("runtimes.txt", ios::trunc);
+    ofstream outputFile1("output/FtimeBubSort.txt", ios::trunc);
+    ofstream outputFile2("output/FcostbubSort.txt", ios::trunc);
+    ofstream outputFile3("output/FtimeMerSort.txt", ios::trunc);
+    ofstream outputFile4("output/FcostMerSort.txt", ios::trunc);
+    ofstream runTimeFile("output/runtimes.txt", ios::trunc);
     
     // initlize n and delim for parsing
     int n;
@@ -109,6 +123,7 @@ int main() {
             cout << FlightCost[i] << " ";
         }
         */
+
         // Merge Sort Timing
         tStartMer = clock();
         mergeSort(mergeTime, 0 , n - 1);
@@ -145,7 +160,7 @@ int main() {
         */
 
         //Runtime output and conversion
-        ofstream runtimeFile("runtimes.txt", ios::app);
+        ofstream runtimeFile("output/runtimes.txt", ios::app);
         //Conversion to nanoseconds
         long long BubTime = compute_time_Bub*1000000; //  Long Long for removing smaller 
         long long MerTime = compute_time_Mer*1000000; //  values i.e. (3.714.....e-14^10)
@@ -185,8 +200,8 @@ void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
     }
 
     // Open and write Bubble Sort output to file and close
-    ofstream outputFile1("FtimeBubSort.txt", ios::app);
-    ofstream outputFile2("FcostbubSort.txt", ios::app);
+    ofstream outputFile1("output/FtimeBubSort.txt", ios::app);
+    ofstream outputFile2("output/FcostbubSort.txt", ios::app);
     for(int i = 0; i < size; i++){
         outputFile1 << FlightTimeHour[i] << " ";
     }
