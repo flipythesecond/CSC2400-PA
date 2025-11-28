@@ -9,45 +9,12 @@
 \***********************************************************************************************************************************/
 
 // Library includes
-#include <iomanip>
-#include <iostream>
-#include <ctime>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <cmath>
-using namespace std;
+#include "CP2.h" // Contains Functions and Libs
 
 
-//----------Structs-----------//
-
-// City Struct
-struct City {
-    int cityID;
-    double xCoord;
-    double yCoord;
-};
-
-struct ClosestResult {
-    double dist;
-    int cityID1;
-    int cityID2;
-};
 
 
-//----------Function Declarations-----------//
 
-void bubbleSort(double FlightTimeHour[], double FlightCost[], int size);
-void mergeSort(double arr[], int left, int right);
-void merge(double arr[], int left, int mid, int right);
-
-
-double euclideanDist(const City &a, const City &b);
-ClosestResult BFClosest(City cities[], int n);
-ClosestResult BFRange(const vector<City> &pts, int left, int right);
-ClosestResult closestUtil(vector<City> &ptsX, int left, int right);
-ClosestResult divdedAndConquer(City cities[], int n);
 
 
 //-----------Main Function-----------//
@@ -56,7 +23,17 @@ int main() {
     // Program Start Message
     cout << "Starting Program..." << endl;
 
+    //runFlights();
 
+
+    runClosestPair();
+    
+    return 0;
+}
+
+
+void runFlights(){
+    cout << "\n[DEBUG]: Running flights bubble/merge sort..." << endl;
     // Variable Declarations
     string lineTest;
     fstream file("given/flights.txt");
@@ -206,48 +183,91 @@ int main() {
     
     outputFile3.close();
     outputFile4.close();
+    file.close();
 
 
-    // Checkpoint 2: Closest Pair of Cities
+    cout << "[DEBUG]: Flights function finished running..." <<  endl;
 
-    cout << "Starting Closest Pair of Cities..." << endl;
+    
 
-    // Read city data from file
-    fstream cityFile("given/cities.txt");
-    City cities[100];
-    int totalCities = 0;
-
-    while (cityFile >> 
-            cities[totalCities].cityID >> 
-            cities[totalCities].xCoord >> 
-            cities[totalCities].yCoord){
-            totalCities++;
-            
-            if (totalCities >= 100) {
-                break; // Prevent overflow if more than 100 cities
-            }
-        }
-        cityFile.close();
-
-        // TODO: Implement Closest Pair Algorithms and output results
-        ofstream bfFile("output/closest_BF.txt", ios::trunc);
-        ofstream dcFile("output/closest_DC.txt", ios::trunc);
-        ofstream runTimeFile2("output/runtimes2.txt", ios::trunc);
-
-        // TODO: Brute Force Closest Pair
-
-        // TODO: Divide and Conquer Closest Pair
-
-        // TODO: Write runtimes to runtimes2.txt
-
-        // TODO: Close all opened files
-        
-
-
-
-    return 0;
 }
 
+void runClosestPair(){
+    cout << "[DEBUG]: Running closest pair BF & DC..." << endl;
+
+    ifstream inFile("given/cities.txt");
+
+    clock_t tStartBF, tStopBF;
+    clock_t tStartDC, tStopDC;
+    double compute_time_BF = 0, compute_time_DC = 0;
+    
+    if(!inFile.is_open()){
+        cout << "[DEBUG]: (ERROR) Coudln't open cities.txt" << endl;
+    }
+
+    City cities[100];
+    int numCities = 0;
+    string lineTest;
+
+   while(getline(inFile, lineTest)){
+        if(lineTest.empty()){
+            continue;
+        }
+
+        stringstream ss(lineTest);
+
+        ss >> cities[numCities].cityID
+           >> cities[numCities].xCoord
+           >> cities[numCities].yCoord;
+
+        numCities++;
+
+        if(numCities >= 100){
+            cout << "[DEBUG]: (WARNING!) reached 100 cities..." << endl;
+            break;
+        }
+   }
+    inFile.close();
+
+    ofstream bfOut("output/BFClosest.txt", ios::trunc);
+    ofstream dcOut("output/DCClosest.txt", ios::trunc);
+    ofstream runtime("output/runtime2.txt", ios::trunc);
+
+    
+   if(!bfOut.is_open() || !dcOut.is_open() || !runtime.is_open()){
+    cout << "[DEBUG]: (ERROR) Coudln't open one of the city output files..." << endl;
+    return;
+   }
+
+    for(int i = 50; i <= numCities; i++){
+
+        tStartBF = clock();
+        ClosestResult bfRes = BFClosest(cities, i);
+        tStopBF = clock();
+        compute_time_BF = (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
+
+        tStartDC = clock();
+        ClosestResult dcRes = divideAndConquer(cities, i);
+        tStopDC = clock();
+        compute_time_DC = (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
+
+
+        bfOut << bfRes.cityID1 << " " << bfRes.cityID2 << " " << bfRes.dist << endl;
+        dcOut << dcRes.cityID1 << " " << dcRes.cityID2 << " " << dcRes.dist << endl;
+
+        long long BFTime = compute_time_BF*1000000; //  Long Long for removing smaller 
+        long long DCTime = compute_time_DC*1000000; //  values i.e. (3.714.....e-14^10)
+        
+        runtime << "(" << BFTime << ", " << DCTime << ")" << endl;
+    }
+
+    bfOut.close();
+    dcOut.close();
+    runtime.close();
+
+    cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
+
+}
 // Bubble Sort modified from April Crockett and Prantar Ghosh's Pseudo Code
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
     
