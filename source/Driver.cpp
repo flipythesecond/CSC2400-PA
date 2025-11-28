@@ -36,7 +36,7 @@ int main() {
     //runBubbleAndMerge(); // (Checkpoint 1)
 
 
-    //runClosestPair();   // (Checkpoint 2)
+    runClosestPair();   // (Checkpoint 2)
     
     return 0;
 }
@@ -217,6 +217,7 @@ void runClosestPair(){
     clock_t tStartDC, tStopDC;
     double compute_time_BF = 0, compute_time_DC = 0;
     
+
     if(!inFile.is_open()){
         cout << "[DEBUG]: (ERROR) Coudln't open cities.txt" << endl;
     }
@@ -238,10 +239,12 @@ void runClosestPair(){
 
         numCities++;
 
+        /*
         if(numCities >= 100){
             cout << "[DEBUG]: (WARNING!) reached 100 cities..." << endl;
             break;
         }
+        */
    }
     inFile.close();
 
@@ -260,12 +263,12 @@ void runClosestPair(){
         tStartBF = clock();
         ClosestResult bfRes = BFClosest(cities, i);
         tStopBF = clock();
-        compute_time_BF = (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
+        compute_time_BF += (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
 
         tStartDC = clock();
         ClosestResult dcRes = divideAndConquer(cities, i);
         tStopDC = clock();
-        compute_time_DC = (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
+        compute_time_DC += (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
 
 
         bfOut << bfRes.cityID1 << " " << bfRes.cityID2 << " " << bfRes.dist << endl;
