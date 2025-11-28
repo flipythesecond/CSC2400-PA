@@ -8,5 +8,4 @@
 !given/*.txt
 
 # Ignore outputs
-/output/
 /output/*.txt
