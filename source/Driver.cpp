@@ -22,11 +22,6 @@
 #include "PAHeader.h" // Contains Functions and Libs
 
 
-
-
-
-
-
 //----------- Main Function -----------//
 int main() {
     
