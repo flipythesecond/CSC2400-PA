@@ -49,7 +49,7 @@ This program implements two main parts for PA1:
 ├── source/
 │   ├── Driver.cpp       # main() – calls runBubbleAndMerge() / runClosestPair()
 │   ├── Functions.cpp    # algorithms for PA1 (sorting + closest pair)
-│   └── PA1.h            # structs (City, ClosestResult) + function prototypes
+│   └── PAHeader.h       # structs (City, ClosestResult) + function prototypes
 ├── given/
 │   ├── flights.txt      # input flight data
 │   └── cities.txt       # input city coordinates
@@ -58,8 +58,8 @@ This program implements two main parts for PA1:
 │   ├── FcostBubSort.txt  # [LOG]
 │   ├── FtimeMerSort.txt  # [LOG]
 │   ├── FcostMerSort.txt  # [LOG]
-│   ├── BFClosest.txt     # [LOG]
-│   ├── DCClosest.txt     # [LOG]
+│   ├── BF-Closest.txt     # [LOG]
+│   ├── DC-Closest.txt     # [LOG]
 │   ├── runtimes.txt      # [LOG] Bubble vs Merge   
 │   └── runtimes.txt      # [LOG] BF vs DC        
 ├── .gitignore
