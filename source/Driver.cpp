@@ -186,6 +186,7 @@ void runBubbleAndMerge(){
         long long BubTime = compute_time_Bub*1000000; //  Long Long for removing smaller 
         long long MerTime = compute_time_Mer*1000000; //  values i.e. (3.714.....e-14^10)
         
+        
         runtimeFile << "(" << BubTime << ", " << MerTime << ")" << endl;   
         runtimeFile.close(); 
         
@@ -239,12 +240,10 @@ void runClosestPair(){
 
         numCities++;
 
-        /*
         if(numCities >= 100){
             cout << "[DEBUG]: (WARNING!) reached 100 cities..." << endl;
             break;
         }
-        */
    }
     inFile.close();
 
@@ -268,7 +267,7 @@ void runClosestPair(){
         tStartDC = clock();
         ClosestResult dcRes = divideAndConquer(cities, i);
         tStopDC = clock();
-        compute_time_DC += (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
+        compute_time_DC = (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
 
 
         bfOut << bfRes.cityID1 << " " << bfRes.cityID2 << " " << bfRes.dist << endl;
