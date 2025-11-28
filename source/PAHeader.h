@@ -1,6 +1,6 @@
 /************************************************************************************************************************************
-    Name: PAHeader.h                                                                                                                      |                                                                                            |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                            |
+    Name: PAHeader.h                                                                                                                |                                                                                            |
+    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
     Date: 11/26/2025                                                                                                                |
     Purpose:                                                                                                                        |
       Header file for Project Assignment (PA) Driver.cpp, it declares:                                                              |
