@@ -26,7 +26,7 @@
 using namespace std;
 
 // City Struct
-//Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: (1, 2XX.XX, 3XX.XX)
+//Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: 1 2XX.XX 3XX.XX
 struct City {
     int cityID;    
     double xCoord; 
