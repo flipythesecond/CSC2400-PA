@@ -1,52 +1,87 @@
-/*
-    Name: Driver.cpp
-    Compile: g++ Driver.cpp -o runPA1
-    Authors: Bekhruz Anvarov, Ben Nunley, Lance Johnston
-    Date: 11/7/20
-    Credit Statement: 
-    Example code such as how to use <ctime> library, etc. was provided by April Crockett during CSC-1300 and CSC-1310 courses.
-    Pseudo code reference for bubbleSort & mergeSort provided by Prantar Ghosh in lecture notes.
-*/
+/************************************************************************************************************************************
+    Name: Driver.cpp                                                                                                                |
+    Compile: g++ source/Driver.cpp source/Functions.cpp -o runPA1                                                                   |
+    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                            |
+    Date: 11/7/20                                                                                                                   |
+    Purpose:                                                                                                                        |
+        This Program runs the functions for the Project Assignment for each checkpoint                                              |
+                                                                                                                                    |
+        Checkpoint 1 – Reads flight data, sorts it using Bubble Sort and Merge Sort, and                                            |
+        records the sorted results and runtimes to output files                                                                     |
+                                                                                                                                    |
+        Checkpoint 2 – Reads city coordinate data, computes the closest pair of cities using                                        |
+        both a brute-force algorithm and a divide and conquer algorithm, and records the                                            |
+        closest pairs and runtimes for comparison.                                                                                  |
+                                                                                                                                    |
+    Credit Statement:                                                                                                               |
+        Example code such as how to use <ctime> library, etc. was provided by April Crockett during CSC-1300 and CSC-1310 courses.  |
+        Pseudo code reference for bubbleSort & mergeSort provided by Prantar Ghosh in lecture notes.                                |
+\***********************************************************************************************************************************/
 
 // Library includes
-#include <iomanip>
-#include <iostream>
-#include <ctime>
-#include <vector>
-#include <fstream>
-#include <string>
-#include <sstream>
-using namespace std;
+#include "PAHeader.h" // Contains Functions and Libs
 
-// Function Prototypes
-void bubbleSort(double FlightTimeHour[], double FlightCost[], int size);
-void mergeSort(double arr[], int left, int right);
-void merge(double arr[], int left, int mid, int right);
 
+//----------- Main Function -----------//
 int main() {
     
+    // Program Start Message
+    cout << "Starting Program..." << endl;
+
+    /***************************************\
+    | Uncomment to run either function,     |
+    | haven't ran both at the same time yet |
+    \***************************************/
+
+    //runBubbleAndMerge(); // (Checkpoint 1)
+
+
+    runClosestPair();   // (Checkpoint 2)
+    
+    return 0;
+}
+
+//------------- Checkpoint 1 Flights Function ----------------//
+void runBubbleAndMerge(){
+    cout << "\n[DEBUG]: Running flights bubble/merge sort..." << endl;
     // Variable Declarations
     string lineTest;
-    fstream file("flights.txt");
+    fstream file("given/flights.txt");
+    
+    /* check if file opened successfully
+    if (!file.is_open()) {
+        cerr << "ERROR: Could not open ../given/flights.txt" << endl;
+        return 1;
+    }
+    cout << "Successfully opened flights.txt" << endl;
+    */
+
+  
 
     clock_t tStartBub, tStopBub;
     clock_t tStartMer, tStopMer;
-    double compute_time_Bub, compute_time_Mer;
+    double compute_time_Bub = 0, compute_time_Mer = 0;
+    
 
+    
     /*vector<double> FlightTimeHour;
     vector<double> FlightCost;
     vector<int> CityNum; */
+
+    
     double FlightTimeHour[100];
     double FlightCost[100];
     int CityNum[100];
     
     // truncate files at start of program (prevents duplicates)
-    ofstream outputFile1("FtimeBubSort.txt", ios::trunc);
-    ofstream outputFile2("FcostbubSort.txt", ios::trunc);
-    ofstream outputFile3("FtimeMerSort.txt", ios::trunc);
-    ofstream outputFile4("FcostMerSort.txt", ios::trunc);
-    ofstream runTimeFile("runtimes.txt", ios::trunc);
+    ofstream outputFile1("output/FtimeBubSort.txt", ios::trunc);
+    ofstream outputFile2("output/FcostbubSort.txt", ios::trunc);
+    ofstream outputFile3("output/FtimeMerSort.txt", ios::trunc);
+    ofstream outputFile4("output/FcostMerSort.txt", ios::trunc);
+    ofstream runTimeFile("output/runtimes.txt", ios::trunc);
+    runTimeFile.close();
     
+    //ofstream runTimeFile("output/runtimes.txt", ios::trunc);
     // initlize n and delim for parsing
     int n;
     char delim;
@@ -109,6 +144,7 @@ int main() {
             cout << FlightCost[i] << " ";
         }
         */
+
         // Merge Sort Timing
         tStartMer = clock();
         mergeSort(mergeTime, 0 , n - 1);
@@ -145,7 +181,7 @@ int main() {
         */
 
         //Runtime output and conversion
-        ofstream runtimeFile("runtimes.txt", ios::app);
+        ofstream runtimeFile("output/runtimes.txt", ios::app);
         //Conversion to nanoseconds
         long long BubTime = compute_time_Bub*1000000; //  Long Long for removing smaller 
         long long MerTime = compute_time_Mer*1000000; //  values i.e. (3.714.....e-14^10)
@@ -157,113 +193,94 @@ int main() {
     
     outputFile3.close();
     outputFile4.close();
-    return 0;
-}
+    file.close();
 
-// Bubble Sort modified from April Crockett and Prantar Ghosh's Pseudo Code
-void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
+
+    cout << "[DEBUG]: Flights function finished running..." <<  endl;
+
     
-    for(int i = 0; i < size - 1; i++){
-        for(int j = 0; j < size - i - 1; j++){
-            if(FlightTimeHour[j] > FlightTimeHour[j + 1]){
-                double tempT = FlightTimeHour[j];
-                FlightTimeHour[j] = FlightTimeHour[j + 1];
-                FlightTimeHour[j + 1] = tempT;
-                
-                //cout << "Time Swapped " << FlightTimeHour[j + 1] << " and " << FlightTimeHour[j] << endl;
-                //break;
-            }
-            
-            if(FlightCost[j] > FlightCost[j + 1]){
-                double tempC = FlightCost[j];
-                FlightCost[j] = FlightCost[j + 1];
-                FlightCost[j + 1] = tempC;
-                
-                //cout << "Cost Swapped " << FlightCost[j + 1] << " and " << FlightCost[j] << endl;
-            }
-        }
-    }
-
-    // Open and write Bubble Sort output to file and close
-    ofstream outputFile1("FtimeBubSort.txt", ios::app);
-    ofstream outputFile2("FcostbubSort.txt", ios::app);
-    for(int i = 0; i < size; i++){
-        outputFile1 << FlightTimeHour[i] << " ";
-    }
-    outputFile1 << endl;
-    for(int i = 0; i < size; i++){
-        outputFile2 << FlightCost[i] << " ";
-    }
-    outputFile2 << endl;
-    outputFile1.close();
-    outputFile2.close();
 
 }
 
-//MergeSort modified from April Crockett 
-void mergeSort(double arr[], int left, int right){
+//---------- Checkpoint 2 Brute Force & Divide and Conquer --------------//
+void runClosestPair(){
+    cout << "[DEBUG]: Running closest pair BF & DC..." << endl;
 
-    //Base case
-    if (left >= right ){
+    ifstream inFile("given/cities.txt");
+
+    if(!inFile.is_open()){
+        cout << "[DEBUG]: (ERROR) Couldn't open cities.txt" << endl;
         return;
     }
+
+    clock_t tStartBF, tStopBF;
+    clock_t tStartDC, tStopDC;
+    double compute_time_BF = 0, compute_time_DC = 0;
     
-    // Initlize mid point
-    int mid = left + (right - left) / 2;    
-    
-    // Recursively sort first and second halves
-    mergeSort(arr, left, mid);
-    mergeSort(arr, mid + 1, right);
-    merge(arr, left, mid, right);
+    if(!inFile.is_open()){
+        cout << "[DEBUG]: (ERROR) Coudln't open cities.txt" << endl;
+    }
 
-}
+    City cities[100];
+    int numCities = 0;
+    string lineTest;
 
-// Merge algorithim modified from April Crockett
-void merge(double arr[], int left, int mid, int right){
-
-    //Initilize variables
-    int mergedSize = right - left + 1;
-    int mergePos = 0;
-    int leftPos = left;
-    int rightPos = mid + 1;
-
-    // Create temporary arrays
-    double* temp = new double[mergedSize];
-
-    // Merge the two subarrays into temp[]
-    while (leftPos <= mid && rightPos <= right) {
-        if(arr[leftPos] <= arr[rightPos]) {
-            temp[mergePos] = arr[leftPos];
-            leftPos++;
-            mergePos++;
-         
-        } 
-        else {
-            temp[mergePos] = arr[rightPos];
-            rightPos++;
-            mergePos++;
+   while(getline(inFile, lineTest)){
+        if(lineTest.empty()){
+            continue;
         }
-    }
 
-    // Copy the remaining elements of left subarray
-    while (leftPos <= mid) {
-        temp[mergePos] = arr[leftPos];
-        leftPos++;
-        mergePos++;
-    }
+        stringstream ss(lineTest);
+
+        ss >> cities[numCities].cityID
+           >> cities[numCities].xCoord
+           >> cities[numCities].yCoord;
+
+        numCities++;
+
+        if(numCities >= 100){
+            cout << "[DEBUG]: (WARNING!) reached 100 cities..." << endl;
+            break;
+        }
+   }
+    inFile.close();
+
+    ofstream bfOut("output/BF-Closest.txt", ios::trunc);
+    ofstream dcOut("output/DC-Closest.txt", ios::trunc);
+    ofstream runtime("output/runtimes.txt", ios::trunc);
+
     
-    // Copy the remaining elements of right subarray
-    while (rightPos <= right) {
-        temp[mergePos] = arr[rightPos];
-        rightPos++;
-        mergePos++;
+   if(!bfOut.is_open() || !dcOut.is_open() || !runtime.is_open()){
+    cout << "[DEBUG]: (ERROR) Coudln't open one of the city output files..." << endl;
+    return;
+   }
+
+    for(int i = 50; i <= numCities; i++){
+
+        tStartBF = clock();
+        ClosestResult bfRes = BFClosest(cities, i);
+        tStopBF = clock();
+        compute_time_BF = (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
+
+        tStartDC = clock();
+        ClosestResult dcRes = divideAndConquer(cities, i);
+        tStopDC = clock();
+        compute_time_DC = (double)(tStopDC - tStartDC) / CLOCKS_PER_SEC;
+
+
+        bfOut << bfRes.cityID1 << " " << bfRes.cityID2 << " " << bfRes.dist << endl;
+        dcOut << dcRes.cityID1 << " " << dcRes.cityID2 << " " << dcRes.dist << endl;
+
+        long long BFTime = compute_time_BF*1000000; //  Long Long for removing smaller 
+        long long DCTime = compute_time_DC*1000000; //  values i.e. (3.714.....e-14^10)
+        
+        runtime << "(" << BFTime << ", " << DCTime << ")" << endl;
     }
 
-    // Copy the merged elements back into original array
-    for (int i = 0; i < mergedSize; i++) {
-        arr[left + i] = temp[i];
-    }
+    bfOut.close();
+    dcOut.close();
+    runtime.close();
 
-    // Delete temporary array
-    delete[] temp;
+    cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
+
 }
