@@ -36,7 +36,10 @@ int main() {
     //runBubbleAndMerge(); // (Checkpoint 1)
 
 
-    runClosestPair();   // (Checkpoint 2)
+    //runClosestPair();   // (Checkpoint 2)
+
+    checkPoint3();        // (Checkpoint 3)
+
     
     return 0;
 }
@@ -283,4 +286,93 @@ void runClosestPair(){
 
     cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
 
+<<<<<<< Updated upstream
+=======
+}
+
+
+void checkPoint3(){
+
+    //cout << "Starting CheckPoint 3: " << endl;
+    // Open output file
+    fstream file("given/roundtrip_costs.txt");
+    ofstream debug("output/debug.txt", ios::trunc);
+
+    
+   
+    
+    //double CostFlight[100];
+
+    //Dynamically Allocate Array
+    vector<int> CityNum  = {};
+    vector<double>CostRound = {};
+    //CityCost* CityNum = new CityCost[100];
+    
+    //Parsing
+    string lineTest;
+    int n, city;
+    double cost;
+    char delim;
+    stringstream ss(lineTest);
+    
+    while(getline(file, lineTest)) {
+        n = 0;
+        //cout << "in getline" << endl;
+        if(lineTest.empty()) {
+            continue;
+        }
+        
+        
+        while(ss >> delim) {
+            //cout << lineTest << endl;
+            cout << "outer loop" << endl;
+            
+            if(delim == '('){
+                cout << lineTest << endl;
+                cout << "inner loop" << endl;
+                //ss >> CityNum[n]  >> delim >> FlightTimeHour[n] >> delim >> FlightCost[n] >> delim
+                
+                
+                ss >> city >> delim >> cost >> delim;
+
+                CityNum.push_back(city);
+                CostRound.push_back(cost);
+
+                cout << "City: " << CityNum.at(n) << " flightCost: " << CostRound.at(n) << endl;
+                
+                n++;
+            }
+
+            
+            //cout << "Size of Array Cities: " << CityNum.size() << endl;
+
+            /*
+            while(ss.get(delim)){
+                    if(delim != '(' || delim != ',' || delim != ')'){
+                        cout << "[DEBUG]: CITY RUNNING..." << endl;
+                        CityNum.push_back(n);
+                    }
+
+                    if(delim != '(' || delim != ',' || delim != ')'){
+                        cout << "[DEBUG]: COST RUNNING..." << endl;
+                        CostRound.push_back(n);
+                    }
+
+                    break;
+            }
+            */
+            
+        }
+                
+        //cout << "Size of Array Cities: " << CityNum.size() << endl;
+    }
+    
+
+    debug.close();
+    
+
+    //delete[] CityNum;
+    //delete[] CostRound;
+
+>>>>>>> Stashed changes
 }

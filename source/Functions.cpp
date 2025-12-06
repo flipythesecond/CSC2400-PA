@@ -122,7 +122,7 @@ void merge(double arr[], int left, int mid, int right){
 }
 
 
-// // Computes Euclidean distance between two cities using their (x, y) coordinates
+// Computes Euclidean distance between two cities using their (x, y) coordinates
 double euclideanDist(const City& a, const City& b) {
     double dx = a.xCoord - b.xCoord;
     double dy = a.yCoord - b.yCoord;
@@ -287,6 +287,7 @@ ClosestResult divideAndConquer(City cities[], int n){
     return closestUtil(ptsX, 0, n - 1);
 
 }
+
 
 
 /*-----------Function Declerations for reference--------------------*\
