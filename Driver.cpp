@@ -1,24 +1,43 @@
-/************************************************************************************************************************************
+/***********************************************************************************************************************************\
     Name: Driver.cpp                                                                                                                |
-    Compile: g++ Driver.cpp -o runProg2                                                                        |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
-    Date: 11/7/20                                                                                                                   |
+    Compile: g++ source/Driver.cpp source/Functions.cpp                                                                             |
+    Authors: Bek Anvarov, Lance Johnston                                                                                            |
+    Date: 11/7/2025                                                                                                                 |
+    Updated: 12/6/2025                                                                                                              |
     Purpose:                                                                                                                        |
         This Program runs the functions for the Project Assignment for each checkpoint                                              |
-                                                                                                                                    |
-        Checkpoint 1 - Reads flight data, sorts it using Bubble Sort and Merge Sort, and                                            |
+    -                                                                                                                               |
+        Checkpoint 1 – Reads flight data, sorts it using Bubble Sort and Merge Sort, and                                            |
         records the sorted results and runtimes to output files                                                                     |
-                                                                                                                                    |
-        Checkpoint 2 - Reads city coordinate data, computes the closest pair of cities using                                        |
+    -                                                                                                                               |
+        Checkpoint 2 – Reads city coordinate data, computes the closest pair of cities using                                        |
         both a brute-force algorithm and a divide and conquer algorithm, and records the                                            |
         closest pairs and runtimes for comparison.                                                                                  |
-                                                                                                                                    |
+    -                                                                                                                               |
+        Checkpoint 3 - Reads round-trip cost data, uses a knapsack DP algorithim to find for each                                   |
+        starting city, the maxmimum number of cities that can be visted under a fixed budget,                                       |
+        and writes these values to an output file                                                                                   |
+    -                                                                                                                               |
     Credit Statement:                                                                                                               |
         Example code such as how to use <ctime> library, etc. was provided by April Crockett during CSC-1300 and CSC-1310 courses.  |
-        Pseudo code reference for bubbleSort & mergeSort provided by Prantar Ghosh in lecture notes.                                |
+        Pseudo code reference for bubbleSort & mergeSort, knapsack DP provided by Prantar Ghosh in lecture notes.                   |
 \***********************************************************************************************************************************/
 
-// Library includes
+/***********************************************************************************************************************************\
+    Name: PAHeader.h                                                                                                                |                                                                                            |
+    Authors: Bek Anvarov,Lance Johnston                                                                                             |
+    Date: 11/26/2025                                                                                                                |
+    Updated: 12/6/2025                                                                                                              |
+    Purpose:                                                                                                                        |
+      Header file for Project Assignment (PA) Driver.cpp, it declares:                                                              |
+        Data structures for representing cities and closest-pair results.                                                           |
+        Driver functions for running the flights (Checkpoint 1) and closest pair (Checkpoint 2) algorithims.                        |                                                                                                             |
+        Sorting functions (Bubble Sort and Merge Sort) used for flight data.                                                        |
+        Brute force and divide and conquer functions for the closest pair of cities problem.                                        |
+        Knapsack helper function used to compute maxmimum number of cities that can be visted                                       |
+        under a fixed round-trip budget for each starting city. (Checkpoint 3)                                                      |                                                                                                                                                       |
+\***********************************************************************************************************************************/
+
 #include <iostream>
 #include <iomanip>
 #include <ctime>        // clock(), CLOCK_PER_SEC for runtime mesurements
@@ -29,6 +48,14 @@
 #include <vector>       // vector used in D&C closest pair algorithim
 #include <algorithm>
 using namespace std;
+
+/*
+class RoundTrips{
+    public:
+        
+}
+*/
+
 
 // City Struct
 //Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: 1 2XX.XX 3XX.XX
@@ -46,18 +73,22 @@ struct ClosestResult {
     int cityID2;
 };
 
+
+
+
 //---------------------- Function Declarations -----------------------------//
 
 //Sectioned off the checkpoints for organization purposes
 void runBubbleAndMerge(); // Checkpoint 1 function call, uses flights.txt 
 void runClosestPair();   // Checkpoint 2 function call, uses cities.txt
 
-// Checkpoint 1 algorithims and helper functions
+
+//--- Checkpoint 1 algorithims and helper functions ---//
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size);
 void mergeSort(double arr[], int left, int right);
 void merge(double arr[], int left, int mid, int right);
 
-// Checkpoint 2 algorithims and helper functions
+//--- Checkpoint 2 algorithims and helper functions ---//
 double euclideanDist(const City &a, const City &b); // Computes Euclidean distance between two cities using their (x, y) coordinates
 bool compareYCoord(const City& a, const City& b);   // Sort cities by y-coordinates
 bool compareXCoord(const City& a, const City& b);   // Sort cities by x-coordinates
@@ -66,9 +97,14 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right); // Brute-fo
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right);  // Recursive helper for divide-and-conquer closest pair
 ClosestResult divideAndConquer(City cities[], int n); // // Copies cities[] into a vector, sorts by x, and calls closestUtil
 
-
+//--- Checkpoint 3 algorithims and helper functions ---//
+void runRoundTrip();                    // Placeholder for Checkpoint 3 function call
+int knapMax(const vector<int> &, int); // knapSack Algorithim
 
 //
+
+
+
 
 //----------- Main Function -----------//
 int main() {
@@ -84,21 +120,25 @@ int main() {
     //runBubbleAndMerge(); // (Checkpoint 1)
 
 
-    runClosestPair();   // (Checkpoint 2)
+    //runClosestPair();   // (Checkpoint 2)
+
+    runRoundTrip();        // (Checkpoint 3)
+
     
     return 0;
 }
 
 //------------- Checkpoint 1 Flights Function ----------------//
 void runBubbleAndMerge(){
-    cout << "\n[DEBUG]: Running flights bubble/merge sort..." << endl;
+
+    //cout << "\n[DEBUG]: Running flights bubble/merge sort..." << endl;
     // Variable Declarations
     string lineTest;
     fstream file("flights.txt");
     
     /* check if file opened successfully
     if (!file.is_open()) {
-        cerr << "ERROR: Could not open flights.txt" << endl;
+        cerr << "ERROR: Could not open ../given/flights.txt" << endl;
         return 1;
     }
     cout << "Successfully opened flights.txt" << endl;
@@ -129,7 +169,7 @@ void runBubbleAndMerge(){
     ofstream runTimeFile("runtimes.txt", ios::trunc);
     runTimeFile.close();
     
-    //ofstream runTimeFile("runtimes.txt", ios::trunc);
+    //ofstream runTimeFile("output/runtimes.txt", ios::trunc);
     // initlize n and delim for parsing
     int n;
     char delim;
@@ -229,7 +269,7 @@ void runBubbleAndMerge(){
         */
 
         //Runtime output and conversion
-        ofstream runtimeFile("runtimes.txt", ios::app);
+        ofstream runtimeFile("output/runtimes.txt", ios::app);
         //Conversion to nanoseconds
         long long BubTime = compute_time_Bub*1000000; //  Long Long for removing smaller 
         long long MerTime = compute_time_Mer*1000000; //  values i.e. (3.714.....e-14^10)
@@ -245,7 +285,7 @@ void runBubbleAndMerge(){
     file.close();
 
 
-    cout << "[DEBUG]: Flights function finished running..." <<  endl;
+    //cout << "[DEBUG]: Flights function finished running..." <<  endl;
 
     
 
@@ -253,14 +293,12 @@ void runBubbleAndMerge(){
 
 //---------- Checkpoint 2 Brute Force & Divide and Conquer --------------//
 void runClosestPair(){
-    
+    //cout << "[DEBUG]: Running closest pair BF & DC..." << endl;
 
-    cout << "[DEBUG]: Running closest pair BF & DC..." << endl;
-
-    ifstream inFile("cities.txt");
+    ifstream inFile("given/cities.txt");
 
     if(!inFile.is_open()){
-        cout << "[DEBUG]: (ERROR) Couldn't open cities.txt" << endl;
+       // cout << "[DEBUG]: (ERROR) Couldn't open cities.txt" << endl;
         return;
     }
 
@@ -269,10 +307,11 @@ void runClosestPair(){
     double compute_time_BF = 0, compute_time_DC = 0;
     
 
+    /*
     if(!inFile.is_open()){
         cout << "[DEBUG]: (ERROR) Coudln't open cities.txt" << endl;
     }
-
+    */
     City cities[100];
     int numCities = 0;
     string lineTest;
@@ -290,10 +329,12 @@ void runClosestPair(){
 
         numCities++;
 
+        /*
         if(numCities >= 100){
             cout << "[DEBUG]: (WARNING!) reached 100 cities..." << endl;
             break;
         }
+        */
    }
     inFile.close();
 
@@ -333,11 +374,128 @@ void runClosestPair(){
     dcOut.close();
     runtime.close();
 
-    cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
+   // cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
 
 }
 
+//--- Check Point 3 Dynamic Programmed Knapsack Algorithim ---//
+void runRoundTrip(){
 
+    // Open input file
+    fstream file("given/roundtrip_costs.txt");
+
+    // Open output file
+    ofstream trip_nums("output/trip_nums.txt", ios::trunc);
+    
+    
+    // Dynamically Allocate Array to check 
+    // how data is parsed
+    vector<int> CityNum;
+    vector<double>CostRound;
+    
+
+
+    // Budget B used in knapsack DP (W)
+    const float BUDGET = 5000;
+
+    // For parsing
+    string lineTest;
+    
+    //Process each line corresponding to one starting city
+    while(getline(file, lineTest)) {
+
+        //Parsing variables
+        stringstream ss(lineTest);
+        
+        vector<int> weights; // weights will hold the ticket costs for the starting city
+        int city;           //  used to track city number
+        int maxTrips;       //  used to output knapsack algorithim
+        double cost;        //  stores cost of each round-trip
+        char delim;         //  used to ignore delimiters
+
+        //Checks if line is empty (no data being parsed)
+        if(lineTest.empty()) {
+            continue;
+        }
+        // cout << "Line: " << lineNumber << " current value: " <<  lineTest << endl;
+
+        // Parses through the file ignoring delimiters,
+        // Example: [(city, cost), (city, cost),...]
+        while(ss >> delim) {
+            
+            // Only parse when "(" is found, indicates the start of a pair 
+            if(delim == '('){
+                ss >> city;    // reads city number
+                ss >> delim;   // discards comma delimiter
+                ss >> cost;    // reads round-trip cost <double>
+                ss >> delim;   // discard closing ")" delimiter
+
+            /************************************************\
+                Stores raw values, used when analysing parser
+                CityNum.push_back(city);
+                CostRound.push_back(cost);
+            *************************************************/
+
+                // Convert the ticket cost with data type <double>
+                // to int using static_cast to index table
+                int wCost = static_cast<int>(cost);
+
+                // If statement for considering tickets that do not
+                // exceed the budget on their own
+                if(wCost <= BUDGET){
+                    weights.push_back(wCost);
+                }
+
+                /* Used for parser debugging
+                for(int i = 0; i < CityNum.size(); i++){
+                    debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << " ";  
+                }
+                */
+                //debug << "\n";   
+            }
+            
+            
+        }
+
+        // Default if no tickets for starting city
+        maxTrips = 0;
+
+        // Run knapsack DP if we parsed at least one ticket cost
+        if(!weights.empty()){
+            maxTrips = knapMax(weights, BUDGET);
+        }
+
+        // Write result for this starting city to the output file
+        // Each line corresponds to one starting city in the input
+        trip_nums << maxTrips << "\n";
+
+    }
+    
+    //Close all files
+    file.close();
+    trip_nums.close();
+
+    
+    //cout << "[DEBUG]: CHECKPOINT 3 FINISHED RUNNING..." << endl;
+
+}
+
+/***********************************************************************************************************************************\
+    Name: Functions.cpp                                                                                                             |
+    Authors: Bek Anvarov, Lance Johnston                                                                                            |
+    Date: 11/26/2025                                                                                                                |
+    Updated: 12/6/2025                                                                                                              |
+    Purpose:                                                                                                                        |
+      Implements the core algorithms used in PA1:                                                                                   |
+        Bubble Sort and Merge Sort for processing flight times and costs               (Checkpoint 1)                               |
+        Euclidean distance computation for 2D city coordinates.                        (Checkpoint 2)                               |
+        Brute force closest pair algorithm over an array or subrange of cities.        (Checkpoint 2)                               |
+        Divide and conquer closest pair algorithm using sorting by (x, y) coordinates. (Checkpoint 2)                               |
+        Knapsack dynamic programming to maximize the number of cities that can be      (Checkpoint 3)                               |
+        visited under a fixed round-trip budget, given the ticket cost data.                                                        |
+\***********************************************************************************************************************************/
+
+//--- Bubble Sort modified from April Crockett and Prantar Ghosh's Pseudo Code ---//
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
     
     for(int i = 0; i < size - 1; i++){
@@ -362,8 +520,8 @@ void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
     }
 
     // Open and write Bubble Sort output to file and close
-    ofstream outputFile1("FtimeBubSort.txt", ios::app);
-    ofstream outputFile2("FcostbubSort.txt", ios::app);
+    ofstream outputFile1("output/FtimeBubSort.txt", ios::app);
+    ofstream outputFile2("output/FcostbubSort.txt", ios::app);
     for(int i = 0; i < size; i++){
         outputFile1 << FlightTimeHour[i] << " ";
     }
@@ -440,31 +598,32 @@ void merge(double arr[], int left, int mid, int right){
     for (int i = 0; i < mergedSize; i++) {
         arr[left + i] = temp[i];
     }
-
+    
     // Delete temporary array
     delete[] temp;
 }
 
 
-// // Computes Euclidean distance between two cities using their (x, y) coordinates
+//--- Computes Euclidean distance between two cities using their (x, y) coordinates ---//
 double euclideanDist(const City& a, const City& b) {
     double dx = a.xCoord - b.xCoord;
     double dy = a.yCoord - b.yCoord;
     return sqrt(dx * dx + dy * dy);
 }
 
-// Comparator for sorting cities by x coordinate (used in divide and conquer)
+//--- Comparator for sorting cities by x coordinate (used in divide and conquer) ---//
 bool compareXCoord(const City& a, const City& b){
     return a.xCoord < b.xCoord;
 }
 
-//// Comparator for sorting cities by y coordinate (used when processing the strip)
+//--- Comparator for sorting cities by y coordinate (used when processing the strip) ---//
 bool compareYCoord(const City& a, const City& b){
     return a.yCoord < b.yCoord;
 }
-
-//Brute force closest pair over the first n cities in the array
-//Checks all O(n^2) pairs and returns the smallest distance and the city IDs
+/*****************************************************************************\
+    Brute force closest pair over the first n cities in the array              |
+    Checks all O(n^2) pairs and returns the smallest distance and the city IDs |
+******************************************************************************/
 ClosestResult BFClosest(City cities[], int n){
     ClosestResult best;
 
@@ -490,9 +649,10 @@ ClosestResult BFClosest(City cities[], int n){
     }
     return best;
 }
-
-// Brute force closest pair in a subrange [left, right] of a vector of cities
-// Used as a helper for the divide-and-conquer algorithm when n is small
+/*********************************************************************************\
+    Brute force closest pair in a subrange [left, right] of a vector of cities    |
+    Used as a helper for the divide-and-conquer algorithm when n is small         |
+\*********************************************************************************/
 ClosestResult BFRange(const vector<City> &pts, int left, int right){
     ClosestResult best;
 
@@ -524,9 +684,10 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right){
     }
     return best;
 }
-
-// Recursive divide and conquer helper for closest pair
-// Assumes ptsX is sorted by x coordinate and works on subarray [left, right]
+/********************************************************************************\
+    Recursive divide and conquer helper for closest pair                         |
+    Assumes ptsX is sorted by x coordinate and works on subarray [left, right]   |
+\********************************************************************************/
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     int n = right - left + 1;
 
@@ -543,6 +704,7 @@ ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     ClosestResult leftRes = closestUtil(ptsX, left, mid);
     ClosestResult rightRes = closestUtil(ptsX, mid + 1, right);
     ClosestResult best;
+
     // Choose the closer of the two results as the current best
     if (leftRes.dist < rightRes.dist){
         best = leftRes;
@@ -591,9 +753,11 @@ ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     return best;
 }
 
-// Divide and conquer driver for closest pair
-// Copies the array of cities into a vector, sorts by x, and calls closestUtil
-// Time complexity should be O(n log n)
+/********************************************************************************\
+    Divide and conquer driver for closest pair                                   |
+    Copies the array of cities into a vector, sorts by x, and calls closestUtil  |
+    Time complexity should be O(n log n)                                         |
+\********************************************************************************/
 ClosestResult divideAndConquer(City cities[], int n){
 
     vector<City> ptsX;
@@ -610,4 +774,63 @@ ClosestResult divideAndConquer(City cities[], int n){
     // Recursive call to compute the closest pair
     return closestUtil(ptsX, 0, n - 1);
 
+}
+
+/***********************************************************************\
+    Knapsack DP algorithim for checkpoint3                              |
+    Given ticket costs (weights) and budget (W), returns max number of  |
+    cities that can be vistied without exceeding budget                 |
+\***********************************************************************/
+int knapMax(const vector<int> &weights, int W){
+    
+    // Number of items
+    int n = static_cast<int>(weights.size());
+    
+    // Variables for the algorithim
+    int wi; // weight of current item 
+    int vi; // value of current item
+    int skip; // result if the item isn't taken 
+    int take; // result if the item is taken
+
+    // Creates 2D DP table, A has n+1 rows and W+1 columns, all initilized to 0
+    // A[i][C] is max number of cities using first i items with budget C
+    vector<vector<int>> A(n + 1, vector<int>(W + 1, 0));
+
+    // Loop over items 1..n 
+    for(int i = 1; i <= n; i++){
+
+        // Get weight/cost of the i-th item
+        wi = weights[i - 1];
+
+        // Each ticket visits 1 city, so value is 1
+        vi = 1;
+        
+        // Loop over all possible budgets C from 1...W
+        for(int C = 1; C <= W; C++){
+
+            // If current item is too expensive for budget C
+            // don't include, copy result from row i-1
+            if(wi > C){
+
+                A[i][C] = A[i - 1][C];
+            }
+            else{
+
+                // Use the best result using items 1...i-1 with budget C
+                skip = A[i-1][C]; // Skip this item
+
+                // Add value of 1 city and look at the best we can do
+                // with remaining budget C - wi using items 1...i-1
+                take = A[i-1][C - wi] + vi; // Take this item
+
+                // max(x,y) returns larget of x and y, 
+                // choosing the better of skipping vs taking
+                A[i][C] = max(skip, take);
+            }
+
+
+        }
+
+    }
+    return A[n][W];
 }
