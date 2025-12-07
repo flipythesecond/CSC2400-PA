@@ -1,21 +1,26 @@
-/************************************************************************************************************************************
+/***********************************************************************************************************************************\
     Name: Driver.cpp                                                                                                                |
     Compile: g++ source/Driver.cpp source/Functions.cpp                                                                             |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
+    Authors: Bek Anvarov, Lance Johnston                                                                                            |
     Date: 11/7/2025                                                                                                                 |
+    Updated: 12/6/2025                                                                                                              |
     Purpose:                                                                                                                        |
         This Program runs the functions for the Project Assignment for each checkpoint                                              |
-                                                                                                                                    |
+    -                                                                                                                               |
         Checkpoint 1 – Reads flight data, sorts it using Bubble Sort and Merge Sort, and                                            |
         records the sorted results and runtimes to output files                                                                     |
-                                                                                                                                    |
+    -                                                                                                                               |
         Checkpoint 2 – Reads city coordinate data, computes the closest pair of cities using                                        |
         both a brute-force algorithm and a divide and conquer algorithm, and records the                                            |
         closest pairs and runtimes for comparison.                                                                                  |
-                                                                                                                                    |
+    -                                                                                                                               |
+        Checkpoint 3 - Reads round-trip cost data, uses a knapsack DP algorithim to find for each                                   |
+        starting city, the maxmimum number of cities that can be visted under a fixed budget,                                       |
+        and writes these values to an output file                                                                                   |
+    -                                                                                                                               |
     Credit Statement:                                                                                                               |
         Example code such as how to use <ctime> library, etc. was provided by April Crockett during CSC-1300 and CSC-1310 courses.  |
-        Pseudo code reference for bubbleSort & mergeSort provided by Prantar Ghosh in lecture notes.                                |
+        Pseudo code reference for bubbleSort & mergeSort, knapsack DP provided by Prantar Ghosh in lecture notes.                   |
 \***********************************************************************************************************************************/
 
 // Library includes
@@ -38,7 +43,7 @@ int main() {
 
     //runClosestPair();   // (Checkpoint 2)
 
-    checkPoint3();        // (Checkpoint 3)
+    runRoundTrip();        // (Checkpoint 3)
 
     
     return 0;
@@ -290,56 +295,75 @@ void runClosestPair(){
 
 }
 
-//Check Point 3
-void checkPoint3(){
-    // Open output file
+//--- Check Point 3 Dynamic Programmed Knapsack Algorithim ---//
+void runRoundTrip(){
+
+    // Open input file
     fstream file("given/roundtrip_costs.txt");
-    ofstream debug("output/debug.txt", ios::trunc);
+
+    // Open output file
     ofstream trip_nums("output/trip_nums.txt", ios::trunc);
-    //Dynamically Allocate Array
+    
+    
+    // Dynamically Allocate Array to check 
+    // how data is parsed
     vector<int> CityNum;
     vector<double>CostRound;
     
 
 
-
+    // Budget B used in knapsack DP (W)
     const float BUDGET = 5000;
 
-
+    // For parsing
     string lineTest;
     
+    //Process each line corresponding to one starting city
     while(getline(file, lineTest)) {
+
         //Parsing variables
         stringstream ss(lineTest);
-        vector<int> weights;
-        int city, maxTrips;
-        double cost;
-        char delim;
+        
+        vector<int> weights; // weights will hold the ticket costs for the starting city
+        int city;           //  used to track city number
+        int maxTrips;       //  used to output knapsack algorithim
+        double cost;        //  stores cost of each round-trip
+        char delim;         //  used to ignore delimiters
 
+        //Checks if line is empty (no data being parsed)
         if(lineTest.empty()) {
-          
             continue;
         }
         // cout << "Line: " << lineNumber << " current value: " <<  lineTest << endl;
 
+        // Parses through the file ignoring delimiters,
+        // Example: [(city, cost), (city, cost),...]
         while(ss >> delim) {
             
+            // Only parse when "(" is found, indicates the start of a pair 
             if(delim == '('){
-                ss >> city;
-                ss >> delim; 
-                ss >> cost;
-                ss >> delim;
+                ss >> city;    // reads city number
+                ss >> delim;   // discards comma delimiter
+                ss >> cost;    // reads round-trip cost <double>
+                ss >> delim;   // discard closing ")" delimiter
 
+            /************************************************\
+                Stores raw values, used when analysing parser
                 CityNum.push_back(city);
                 CostRound.push_back(cost);
+            *************************************************/
 
+                // Convert the ticket cost with data type <double>
+                // to int using static_cast to index table
                 int wCost = static_cast<int>(cost);
 
+                // If statement for considering tickets that do not
+                // exceed the budget on their own
                 if(wCost <= BUDGET){
                     weights.push_back(wCost);
                 }
 
-                /*
+                /* Used for parser debugging
                 for(int i = 0; i < CityNum.size(); i++){
                     debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << " ";  
                 }
@@ -350,19 +374,25 @@ void checkPoint3(){
             
         }
 
+        // Default if no tickets for starting city
         maxTrips = 0;
+
+        // Run knapsack DP if we parsed at least one ticket cost
         if(!weights.empty()){
             maxTrips = knapMax(weights, BUDGET);
         }
 
+        // Write result for this starting city to the output file
+        // Each line corresponds to one starting city in the input
         trip_nums << maxTrips << "\n";
 
     }
     
-    debug.close();
+    //Close all files
     file.close();
     trip_nums.close();
 
-    cout << "[DEBUG]: CHECKPOINT 3 FINISHED RUNNING..." << endl;
+    
+    //cout << "[DEBUG]: CHECKPOINT 3 FINISHED RUNNING..." << endl;
 
 }

@@ -1,13 +1,16 @@
-/************************************************************************************************************************************
+/***********************************************************************************************************************************\
     Name: Functions.cpp                                                                                                             |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
+    Authors: Bek Anvarov, Lance Johnston                                                                                            |
     Date: 11/26/2025                                                                                                                |
+    Updated: 12/6/2025                                                                                                              |
     Purpose:                                                                                                                        |
       Implements the core algorithms used in PA1:                                                                                   |
-        Bubble Sort and Merge Sort for processing flight times and costs               (Checkpoint 1).                              |
+        Bubble Sort and Merge Sort for processing flight times and costs               (Checkpoint 1)                               |
         Euclidean distance computation for 2D city coordinates.                        (Checkpoint 2)                               |
         Brute force closest pair algorithm over an array or subrange of cities.        (Checkpoint 2)                               |
         Divide and conquer closest pair algorithm using sorting by (x, y) coordinates. (Checkpoint 2)                               |
+        Knapsack dynamic programming to maximize the number of cities that can be      (Checkpoint 3)                               |
+        visited under a fixed round-trip budget, given the ticket cost data.                                                        |
 \***********************************************************************************************************************************/
 
 #include "PAHeader.h"
@@ -116,31 +119,32 @@ void merge(double arr[], int left, int mid, int right){
     for (int i = 0; i < mergedSize; i++) {
         arr[left + i] = temp[i];
     }
-
+    
     // Delete temporary array
     delete[] temp;
 }
 
 
-// Computes Euclidean distance between two cities using their (x, y) coordinates
+//--- Computes Euclidean distance between two cities using their (x, y) coordinates ---//
 double euclideanDist(const City& a, const City& b) {
     double dx = a.xCoord - b.xCoord;
     double dy = a.yCoord - b.yCoord;
     return sqrt(dx * dx + dy * dy);
 }
 
-// Comparator for sorting cities by x coordinate (used in divide and conquer)
+//--- Comparator for sorting cities by x coordinate (used in divide and conquer) ---//
 bool compareXCoord(const City& a, const City& b){
     return a.xCoord < b.xCoord;
 }
 
-//// Comparator for sorting cities by y coordinate (used when processing the strip)
+//--- Comparator for sorting cities by y coordinate (used when processing the strip) ---//
 bool compareYCoord(const City& a, const City& b){
     return a.yCoord < b.yCoord;
 }
-
-//Brute force closest pair over the first n cities in the array
-//Checks all O(n^2) pairs and returns the smallest distance and the city IDs
+/*****************************************************************************\
+    Brute force closest pair over the first n cities in the array              |
+    Checks all O(n^2) pairs and returns the smallest distance and the city IDs |
+******************************************************************************/
 ClosestResult BFClosest(City cities[], int n){
     ClosestResult best;
 
@@ -166,9 +170,10 @@ ClosestResult BFClosest(City cities[], int n){
     }
     return best;
 }
-
-// Brute force closest pair in a subrange [left, right] of a vector of cities
-// Used as a helper for the divide-and-conquer algorithm when n is small
+/*********************************************************************************\
+    Brute force closest pair in a subrange [left, right] of a vector of cities    |
+    Used as a helper for the divide-and-conquer algorithm when n is small         |
+\*********************************************************************************/
 ClosestResult BFRange(const vector<City> &pts, int left, int right){
     ClosestResult best;
 
@@ -200,9 +205,10 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right){
     }
     return best;
 }
-
-// Recursive divide and conquer helper for closest pair
-// Assumes ptsX is sorted by x coordinate and works on subarray [left, right]
+/********************************************************************************\
+    Recursive divide and conquer helper for closest pair                         |
+    Assumes ptsX is sorted by x coordinate and works on subarray [left, right]   |
+\********************************************************************************/
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     int n = right - left + 1;
 
@@ -219,6 +225,7 @@ ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     ClosestResult leftRes = closestUtil(ptsX, left, mid);
     ClosestResult rightRes = closestUtil(ptsX, mid + 1, right);
     ClosestResult best;
+
     // Choose the closer of the two results as the current best
     if (leftRes.dist < rightRes.dist){
         best = leftRes;
@@ -267,9 +274,11 @@ ClosestResult closestUtil(vector<City> &ptsX, int left, int right){
     return best;
 }
 
-// Divide and conquer driver for closest pair
-// Copies the array of cities into a vector, sorts by x, and calls closestUtil
-// Time complexity should be O(n log n)
+/********************************************************************************\
+    Divide and conquer driver for closest pair                                   |
+    Copies the array of cities into a vector, sorts by x, and calls closestUtil  |
+    Time complexity should be O(n log n)                                         |
+\********************************************************************************/
 ClosestResult divideAndConquer(City cities[], int n){
 
     vector<City> ptsX;
@@ -287,28 +296,56 @@ ClosestResult divideAndConquer(City cities[], int n){
     return closestUtil(ptsX, 0, n - 1);
 
 }
-//
+
+/***********************************************************************\
+    Knapsack DP algorithim for checkpoint3                              |
+    Given ticket costs (weights) and budget (W), returns max number of  |
+    cities that can be vistied without exceeding budget                 |
+\***********************************************************************/
 int knapMax(const vector<int> &weights, int W){
     
+    // Number of items
     int n = static_cast<int>(weights.size());
-    int wi, vi, skip, take;
+    
+    // Variables for the algorithim
+    int wi; // weight of current item 
+    int vi; // value of current item
+    int skip; // result if the item isn't taken 
+    int take; // result if the item is taken
 
+    // Creates 2D DP table, A has n+1 rows and W+1 columns, all initilized to 0
+    // A[i][C] is max number of cities using first i items with budget C
     vector<vector<int>> A(n + 1, vector<int>(W + 1, 0));
 
+    // Loop over items 1..n 
     for(int i = 1; i <= n; i++){
 
+        // Get weight/cost of the i-th item
         wi = weights[i - 1];
+
+        // Each ticket visits 1 city, so value is 1
         vi = 1;
         
+        // Loop over all possible budgets C from 1...W
         for(int C = 1; C <= W; C++){
+
+            // If current item is too expensive for budget C
+            // don't include, copy result from row i-1
             if(wi > C){
 
                 A[i][C] = A[i - 1][C];
             }
             else{
 
-                skip = A[i-1][C];
-                take = A[i-1][C - wi] + vi;
+                // Use the best result using items 1...i-1 with budget C
+                skip = A[i-1][C]; // Skip this item
+
+                // Add value of 1 city and look at the best we can do
+                // with remaining budget C - wi using items 1...i-1
+                take = A[i-1][C - wi] + vi; // Take this item
+
+                // max(x,y) returns larget of x and y, 
+                // choosing the better of skipping vs taking
                 A[i][C] = max(skip, take);
             }
 
@@ -326,4 +363,5 @@ ClosestResult BFClosest(City cities[], int n);
 ClosestResult BFRange(const vector<City> &pts, int left, int right);
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right);
 ClosestResult divideAndConquer(City cities[], int n);
+int knapMax(const vector<int> &weights, int W);
 ***********************************************************************/

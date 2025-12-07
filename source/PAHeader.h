@@ -1,13 +1,16 @@
-/************************************************************************************************************************************
+/***********************************************************************************************************************************\
     Name: PAHeader.h                                                                                                                |                                                                                            |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
+    Authors: Bek Anvarov,Lance Johnston                                                                                             |
     Date: 11/26/2025                                                                                                                |
+    Updated: 12/6/2025                                                                                                              |
     Purpose:                                                                                                                        |
       Header file for Project Assignment (PA) Driver.cpp, it declares:                                                              |
         Data structures for representing cities and closest-pair results.                                                           |
         Driver functions for running the flights (Checkpoint 1) and closest pair (Checkpoint 2) algorithims.                        |                                                                                                             |
         Sorting functions (Bubble Sort and Merge Sort) used for flight data.                                                        |
-        Brute force and divide and conquer functions for the closest pair of cities problem.                                        |                                                                                                                                                       |
+        Brute force and divide and conquer functions for the closest pair of cities problem.                                        |
+        Knapsack helper function used to compute maxmimum number of cities that can be visted                                       |
+        under a fixed round-trip budget for each starting city. (Checkpoint 3)                                                      |                                                                                                                                                       |
 \***********************************************************************************************************************************/
 
 #ifndef PAHEADER_H
@@ -50,10 +53,6 @@ struct ClosestResult {
 };
 
 
-struct CityCost{
-    int CityNum;
-    double rCost;
-};
 
 
 //---------------------- Function Declarations -----------------------------//
@@ -63,12 +62,12 @@ void runBubbleAndMerge(); // Checkpoint 1 function call, uses flights.txt
 void runClosestPair();   // Checkpoint 2 function call, uses cities.txt
 
 
-// Checkpoint 1 algorithims and helper functions
+//--- Checkpoint 1 algorithims and helper functions ---//
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size);
 void mergeSort(double arr[], int left, int right);
 void merge(double arr[], int left, int mid, int right);
 
-// Checkpoint 2 algorithims and helper functions
+//--- Checkpoint 2 algorithims and helper functions ---//
 double euclideanDist(const City &a, const City &b); // Computes Euclidean distance between two cities using their (x, y) coordinates
 bool compareYCoord(const City& a, const City& b);   // Sort cities by y-coordinates
 bool compareXCoord(const City& a, const City& b);   // Sort cities by x-coordinates
@@ -77,8 +76,10 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right); // Brute-fo
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right);  // Recursive helper for divide-and-conquer closest pair
 ClosestResult divideAndConquer(City cities[], int n); // // Copies cities[] into a vector, sorts by x, and calls closestUtil
 
-// Checkpoint 3 algorithims and helper functions
-void checkPoint3(); // Placeholder for Checkpoint 3 function call
+//--- Checkpoint 3 algorithims and helper functions ---//
+void runRoundTrip();                    // Placeholder for Checkpoint 3 function call
 int knapMax(const vector<int> &, int); // knapSack Algorithim
+
 //
+
 #endif
