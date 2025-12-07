@@ -25,6 +25,14 @@
 #include <algorithm>
 using namespace std;
 
+/*
+class RoundTrips{
+    public:
+        
+}
+*/
+
+
 // City Struct
 //Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: 1 2XX.XX 3XX.XX
 struct City {
@@ -42,11 +50,18 @@ struct ClosestResult {
 };
 
 
+struct CityCost{
+    int CityNum;
+    double rCost;
+};
+
+
 //---------------------- Function Declarations -----------------------------//
 
 //Sectioned off the checkpoints for organization purposes
 void runBubbleAndMerge(); // Checkpoint 1 function call, uses flights.txt 
 void runClosestPair();   // Checkpoint 2 function call, uses cities.txt
+
 
 // Checkpoint 1 algorithims and helper functions
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size);
@@ -62,7 +77,8 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right); // Brute-fo
 ClosestResult closestUtil(vector<City> &ptsX, int left, int right);  // Recursive helper for divide-and-conquer closest pair
 ClosestResult divideAndConquer(City cities[], int n); // // Copies cities[] into a vector, sorts by x, and calls closestUtil
 
-
-
+// Checkpoint 3 algorithims and helper functions
+void checkPoint3(); // Placeholder for Checkpoint 3 function call
+int knapMax(const vector<int> &, int); // knapSack Algorithim
 //
 #endif

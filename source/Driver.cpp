@@ -36,7 +36,10 @@ int main() {
     //runBubbleAndMerge(); // (Checkpoint 1)
 
 
-    runClosestPair();   // (Checkpoint 2)
+    //runClosestPair();   // (Checkpoint 2)
+
+    checkPoint3();        // (Checkpoint 3)
+
     
     return 0;
 }
@@ -284,5 +287,82 @@ void runClosestPair(){
     runtime.close();
 
     cout << "[DEBUG]: Closest pair funcation finished running..." << endl;
+
+}
+
+//Check Point 3
+void checkPoint3(){
+    // Open output file
+    fstream file("given/roundtrip_costs.txt");
+    ofstream debug("output/debug.txt", ios::trunc);
+    ofstream trip_nums("output/trip_nums.txt", ios::trunc);
+    //Dynamically Allocate Array
+    vector<int> CityNum;
+    vector<double>CostRound;
+    
+
+
+
+    const float BUDGET = 5000;
+
+
+    string lineTest;
+    
+    while(getline(file, lineTest)) {
+        //Parsing variables
+        stringstream ss(lineTest);
+        vector<int> weights;
+        int city, maxTrips;
+        double cost;
+        char delim;
+
+        if(lineTest.empty()) {
+          
+            continue;
+        }
+        // cout << "Line: " << lineNumber << " current value: " <<  lineTest << endl;
+
+        while(ss >> delim) {
+            
+            if(delim == '('){
+                ss >> city;
+                ss >> delim; 
+                ss >> cost;
+                ss >> delim;
+
+                CityNum.push_back(city);
+                CostRound.push_back(cost);
+
+                int wCost = static_cast<int>(cost);
+
+                if(wCost <= BUDGET){
+                    weights.push_back(wCost);
+                }
+
+                /*
+                for(int i = 0; i < CityNum.size(); i++){
+                    debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << " ";  
+                }
+                */
+                //debug << "\n";   
+            }
+            
+            
+        }
+
+        maxTrips = 0;
+        if(!weights.empty()){
+            maxTrips = knapMax(weights, BUDGET);
+        }
+
+        trip_nums << maxTrips << "\n";
+
+    }
+    
+    debug.close();
+    file.close();
+    trip_nums.close();
+
+    cout << "[DEBUG]: CHECKPOINT 3 FINISHED RUNNING..." << endl;
 
 }

@@ -122,7 +122,7 @@ void merge(double arr[], int left, int mid, int right){
 }
 
 
-// // Computes Euclidean distance between two cities using their (x, y) coordinates
+// Computes Euclidean distance between two cities using their (x, y) coordinates
 double euclideanDist(const City& a, const City& b) {
     double dx = a.xCoord - b.xCoord;
     double dy = a.yCoord - b.yCoord;
@@ -287,7 +287,37 @@ ClosestResult divideAndConquer(City cities[], int n){
     return closestUtil(ptsX, 0, n - 1);
 
 }
+//
+int knapMax(const vector<int> &weights, int W){
+    
+    int n = static_cast<int>(weights.size());
+    int wi, vi, skip, take;
 
+    vector<vector<int>> A(n + 1, vector<int>(W + 1, 0));
+
+    for(int i = 1; i <= n; i++){
+
+        wi = weights[i - 1];
+        vi = 1;
+        
+        for(int C = 1; C <= W; C++){
+            if(wi > C){
+
+                A[i][C] = A[i - 1][C];
+            }
+            else{
+
+                skip = A[i-1][C];
+                take = A[i-1][C - wi] + vi;
+                A[i][C] = max(skip, take);
+            }
+
+
+        }
+
+    }
+    return A[n][W];
+}
 
 /*-----------Function Declerations for reference--------------------*\
 bool compareYCoord(const City& a, const City& b);
