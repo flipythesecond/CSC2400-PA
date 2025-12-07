@@ -79,6 +79,6 @@ ClosestResult divideAndConquer(City cities[], int n); // // Copies cities[] into
 
 // Checkpoint 3 algorithims and helper functions
 void checkPoint3(); // Placeholder for Checkpoint 3 function call
-
+int knapMax(const vector<int> &, int); // knapSack Algorithim
 //
 #endif

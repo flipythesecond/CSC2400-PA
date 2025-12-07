@@ -291,16 +291,17 @@ void runClosestPair(){
 void checkPoint3(){
 
     //cout << "Starting CheckPoint 3: " << endl;
+
     // Open output file
     fstream file("given/roundtrip_costs.txt");
     ofstream debug("output/debug.txt", ios::trunc);
 
-    //double CostFlight[100];
+    
 
     //Dynamically Allocate Array
     vector<int> CityNum;
     vector<double>CostRound;
-    //CityCost* CityNum = new CityCost[100];
+ 
     
    string lineTest;
     
@@ -320,23 +321,11 @@ void checkPoint3(){
         
         
         while(ss >> delim) {
-            //cout << lineTest << endl;
+         
             //cout << "outer loop" << endl;
             
             if(delim == '('){
-                /*
-                cout << lineTest << endl;
-                cout << "inner loop" << endl;
-                //ss >> CityNum[n]  >> delim >> FlightTimeHour[n] >> delim >> FlightCost[n] >> delim
                 
-                ss >> city >> delim >> cost >> delim;
-
-                CityNum.push_back(city);
-                CostRound.push_back(cost);
-
-                cout << "City: " << CityNum.at(n) << " flightCost: " << CostRound.at(n) << endl;
-                
-                n++;*/
                 ss >> city;
                 ss >> delim; 
                 ss >> cost;
@@ -350,27 +339,10 @@ void checkPoint3(){
                 for(int i = 0; i < CityNum.size(); i++){
                     debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << "\n";
                 }
-
-               
+                
             }
             
-            //cout << "Size of Array Cities: " << CityNum.size() << endl;
-
-            /*
-            while(ss.get(delim)){
-                    if(delim != '(' || delim != ',' || delim != ')'){
-                        cout << "[DEBUG]: CITY RUNNING..." << endl;
-                        CityNum.push_back(n);
-                    }
-
-                    if(delim != '(' || delim != ',' || delim != ')'){
-                        cout << "[DEBUG]: COST RUNNING..." << endl;
-                        CostRound.push_back(n);
-                    }
-
-                    break;
-            }
-            */
+            
             
         }
                 
@@ -383,5 +355,81 @@ void checkPoint3(){
 
     //delete[] CityNum;
     //delete[] CostRound;
+
+}
+
+void checkPoint3(){
+    // Open output file
+    fstream file("given/roundtrip_costs.txt");
+    ofstream debug("output/debug.txt", ios::trunc);
+    ofstream trip_nums("output/trip_nums.txt", ios::trunc);
+    //Dynamically Allocate Array
+    vector<int> CityNum;
+    vector<double>CostRound;
+    
+
+
+
+    const float BUDGET = 5000;
+
+
+    string lineTest;
+    
+    while(getline(file, lineTest)) {
+        //Parsing variables
+        stringstream ss(lineTest);
+        vector<int> weights;
+        int city, maxTrips;
+        double cost;
+        char delim;
+
+        if(lineTest.empty()) {
+          
+            continue;
+        }
+        // cout << "Line: " << lineNumber << " current value: " <<  lineTest << endl;
+
+        while(ss >> delim) {
+            
+            if(delim == '('){
+                ss >> city;
+                ss >> delim; 
+                ss >> cost;
+                ss >> delim;
+
+                CityNum.push_back(city);
+                CostRound.push_back(cost);
+
+                int wCost = static_cast<int>(cost);
+
+                if(wCost <= BUDGET){
+                    weights.push_back(wCost);
+                }
+
+                /*
+                for(int i = 0; i < CityNum.size(); i++){
+                    debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << " ";  
+                }
+                */
+                //debug << "\n";   
+            }
+            
+            
+        }
+
+        maxTrips = 0;
+        if(!weights.empty()){
+            maxTrips = knapMax(weights, BUDGET);
+        }
+
+        trip_nums << maxTrips << "\n";
+
+    }
+    
+    debug.close();
+    file.close();
+    trip_nums.close();
+
+    cout << "[DEBUG]: CHECKPOINT 3 FINISHED RUNNING..." << endl;
 
 }
