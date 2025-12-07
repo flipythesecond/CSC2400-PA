@@ -28,14 +28,6 @@
 #include <algorithm>
 using namespace std;
 
-/*
-class RoundTrips{
-    public:
-        
-}
-*/
-
-
 // City Struct
 //Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: 1 2XX.XX 3XX.XX
 struct City {
@@ -51,9 +43,6 @@ struct ClosestResult {
     int cityID1;
     int cityID2;
 };
-
-
-
 
 //---------------------- Function Declarations -----------------------------//
 
@@ -79,7 +68,6 @@ ClosestResult divideAndConquer(City cities[], int n); // // Copies cities[] into
 //--- Checkpoint 3 algorithims and helper functions ---//
 void runRoundTrip();                    // Placeholder for Checkpoint 3 function call
 int knapMax(const vector<int> &, int); // knapSack Algorithim
-
 //
 
 #endif

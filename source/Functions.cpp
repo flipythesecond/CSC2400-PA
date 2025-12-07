@@ -13,8 +13,8 @@
         visited under a fixed round-trip budget, given the ticket cost data.                                                        |
 \***********************************************************************************************************************************/
 
+// Library Includes
 #include "PAHeader.h"
-
 
 //--- Bubble Sort modified from April Crockett and Prantar Ghosh's Pseudo Code ---//
 void bubbleSort(double FlightTimeHour[], double FlightCost[], int size){
@@ -205,6 +205,7 @@ ClosestResult BFRange(const vector<City> &pts, int left, int right){
     }
     return best;
 }
+
 /********************************************************************************\
     Recursive divide and conquer helper for closest pair                         |
     Assumes ptsX is sorted by x coordinate and works on subarray [left, right]   |
