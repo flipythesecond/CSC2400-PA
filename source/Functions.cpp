@@ -1,12 +1,12 @@
 /************************************************************************************************************************************
     Name: Functions.cpp                                                                                                             |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                            |
+    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
     Date: 11/26/2025                                                                                                                |
     Purpose:                                                                                                                        |
       Implements the core algorithms used in PA1:                                                                                   |
         Bubble Sort and Merge Sort for processing flight times and costs               (Checkpoint 1).                              |
         Euclidean distance computation for 2D city coordinates.                        (Checkpoint 2)                               |
-        Brute force closest-pair algorithm over an array or subrange of cities.        (Checkpoint 2)                               |
+        Brute force closest pair algorithm over an array or subrange of cities.        (Checkpoint 2)                               |
         Divide and conquer closest pair algorithm using sorting by (x, y) coordinates. (Checkpoint 2)                               |
 \***********************************************************************************************************************************/
 

@@ -8,5 +8,8 @@
 !given/*.txt
 
 # Ignore outputs
-/output/
 /output/*.txt
+
+
+# VS Code settings
+.vscode/

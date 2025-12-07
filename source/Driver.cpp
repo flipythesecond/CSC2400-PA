@@ -1,8 +1,8 @@
 /************************************************************************************************************************************
     Name: Driver.cpp                                                                                                                |
-    Compile: g++ source/Driver.cpp source/Functions.cpp -o runPA1                                                                   |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                            |
-    Date: 11/7/20                                                                                                                   |
+    Compile: g++ source/Driver.cpp source/Functions.cpp                                                                             |
+    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
+    Date: 11/7/2025                                                                                                                 |
     Purpose:                                                                                                                        |
         This Program runs the functions for the Project Assignment for each checkpoint                                              |
                                                                                                                                     |
@@ -189,6 +189,7 @@ void runBubbleAndMerge(){
         long long BubTime = compute_time_Bub*1000000; //  Long Long for removing smaller 
         long long MerTime = compute_time_Mer*1000000; //  values i.e. (3.714.....e-14^10)
         
+        
         runtimeFile << "(" << BubTime << ", " << MerTime << ")" << endl;   
         runtimeFile.close(); 
         
@@ -220,6 +221,7 @@ void runClosestPair(){
     clock_t tStartDC, tStopDC;
     double compute_time_BF = 0, compute_time_DC = 0;
     
+
     if(!inFile.is_open()){
         cout << "[DEBUG]: (ERROR) Coudln't open cities.txt" << endl;
     }
@@ -263,7 +265,7 @@ void runClosestPair(){
         tStartBF = clock();
         ClosestResult bfRes = BFClosest(cities, i);
         tStopBF = clock();
-        compute_time_BF = (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
+        compute_time_BF += (double)(tStopBF - tStartBF) / CLOCKS_PER_SEC;
 
         tStartDC = clock();
         ClosestResult dcRes = divideAndConquer(cities, i);
@@ -288,76 +290,7 @@ void runClosestPair(){
 
 }
 
-void checkPoint3(){
-
-    //cout << "Starting CheckPoint 3: " << endl;
-
-    // Open output file
-    fstream file("given/roundtrip_costs.txt");
-    ofstream debug("output/debug.txt", ios::trunc);
-
-    
-
-    //Dynamically Allocate Array
-    vector<int> CityNum;
-    vector<double>CostRound;
- 
-    
-   string lineTest;
-    
-    while(getline(file, lineTest)) {
-        stringstream ss(lineTest);
-
-         //Parsing
-        
-        int n = 0, city;
-        double cost;
-        char delim;
-
-        //cout << "in getline" << endl;
-        if(lineTest.empty()) {
-            continue;
-        }
-        
-        
-        while(ss >> delim) {
-         
-            //cout << "outer loop" << endl;
-            
-            if(delim == '('){
-                
-                ss >> city;
-                ss >> delim; 
-                ss >> cost;
-                ss >> delim;
-
-                
-
-                CityNum.push_back(city);
-                CostRound.push_back(cost);
-
-                for(int i = 0; i < CityNum.size(); i++){
-                    debug << "city: " << CityNum[i] << " cost round: " << CostRound[i] << "\n";
-                }
-                
-            }
-            
-            
-            
-        }
-                
-        //cout << "Size of Array Cities: " << CityNum.size() << endl;
-    }
-    
-
-    debug.close();
-    file.close();
-
-    //delete[] CityNum;
-    //delete[] CostRound;
-
-}
-
+//Check Point 3
 void checkPoint3(){
     // Open output file
     fstream file("given/roundtrip_costs.txt");

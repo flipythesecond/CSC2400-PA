@@ -1,6 +1,6 @@
 /************************************************************************************************************************************
-    Name: PAHeader.h                                                                                                                      |                                                                                            |
-    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                            |
+    Name: PAHeader.h                                                                                                                |                                                                                            |
+    Authors: Bek Anvarov, Ben Nunley, Lance Johnston                                                                                |
     Date: 11/26/2025                                                                                                                |
     Purpose:                                                                                                                        |
       Header file for Project Assignment (PA) Driver.cpp, it declares:                                                              |
@@ -34,7 +34,7 @@ class RoundTrips{
 
 
 // City Struct
-//Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: (1, 2XX.XX, 3XX.XX)
+//Represents a single city with an ID and (x,y) coordiantes, cities.txt parsed (i.e) line 1: 1 2XX.XX 3XX.XX
 struct City {
     int cityID;    
     double xCoord; 
