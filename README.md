@@ -50,7 +50,24 @@ This program implements two main parts for PA1:
    * The objective is to select a subset of tickets that **maximizes the number of cities visited** without exceeding the budget.
    
    ### Dynamic Programming Algorithm
-   * The function `knapMax(weights, W)` builds a DP table:
+   ```Markdown
+   - The function `knapMax(weights, W)` builds a DP table:
+   - A[i][C] = maximum number of cities using the first `i` tickets with budget `C`
+   - For each ticket `i` and each budget `C`:
+   - If the ticket cost is greater than `C`, the ticket is skipped.
+   - Otherwise, the algorithm chooses the better of:
+   - `Skipping` the ticket
+   - `Taking` the ticket and adding one city while reducing the remaining budget
+
+   The final result is stored in A[n][W], where `n` is the number of valid tickets.
+   ```
+   ### Output
+   - The algorithm runs once per starting city.
+   - The maximum number of cities that can be visited within the budget is written to  
+     `output/trip_nums.txt`, with one line per starting city **(100+)**.
+
+   This approach ensures that each travel plan is optimized to visit as many cities as possible without exceeding the available round-trip budget.
+
 ---
 
 ## File Structure
